@@ -1,0 +1,27 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cleanCase
+
+paraFoam -touch
+
+runApplication blockMesh
+runApplication topoSet
+#~ runApplication refineMesh -overwrite
+runApplication decomposePar -force
+
+#~ runApplication rotateMesh "(0 1 0)" "(0 0 1)"
+
+application=`getApplication`
+
+#~ runApplication $application
+
+runParallel $application
+#~ 
+#~ runParallel reconstructParMesh
+#~ 
+runApplication reconstructPar -newTimes
+
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,31 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cleanCase
+
+rm -r 0
+mkdir 0
+cp -r 0.org/* 0/
+
+paraFoam -touch
+
+#~ runApplication gmshToFoam testMesh.msh
+
+runApplication blockMesh
+#~ runApplication topoSet
+#~ runApplication refineMesh -overwrite
+
+runApplication setFields
+
+runApplication decomposePar -force
+
+
+application=`getApplication`
+
+runParallel $application
+
+runApplication reconstructPar -newTimes
+
+
+# ----------------------------------------------------------------- end-of-file
